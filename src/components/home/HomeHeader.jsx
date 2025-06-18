@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import "../../styles/home/home-header.css";
+import "../../styles/global/home-header.css";
 
 function HomeHeader() {
   const { user, isAuthenticated } = useAuth();
