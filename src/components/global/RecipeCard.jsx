@@ -53,9 +53,9 @@ function RecipeCard({
   };
 
   const title = recipe.title;
-const image = isActuallyCommunityRecipe
-  ? (recipe.image_data ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image` : null)
-  : recipe.image;
+  const image = isActuallyCommunityRecipe
+    ? (recipe.image_data ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image` : null)
+    : recipe.image;
   const prepTime = isActuallyCommunityRecipe ? `${recipe.prep_time || 'N/A'} mins` : `${recipe.readyInMinutes} mins`;
   const servings = isActuallyCommunityRecipe ? recipe.servings || 'N/A' : recipe.servings;
   const mood = recipe.mood || "Happy";
@@ -170,13 +170,6 @@ const image = isActuallyCommunityRecipe
 
           {isFavoritesPage && (
             <>
-              <Card.Text className="recipe-description text-muted">
-                {recipe.summary ? 
-                  recipe.summary.replace(/<[^>]*>/g, '').substring(0, 100) + '...' : 
-                  'A delicious recipe to try!'
-                }
-              </Card.Text>
-
               <Card.Text className="recipe-meta text-muted">
                 <strong>Prep Time:</strong> {prepTime} • <strong>Servings:</strong> {servings}
               </Card.Text>
@@ -191,11 +184,7 @@ const image = isActuallyCommunityRecipe
                 </div>
               )}
 
-              <div className="mb-3">
-                <Badge bg={isActuallyCommunityRecipe ? "info" : "primary"} className="me-1">
-                  {isActuallyCommunityRecipe ? "Community Recipe" : "Spoonacular Recipe"}
-                </Badge>
-              </div>
+              {/* 🔧 FIX: Removed the recipe type badges */}
 
               <div className="notes-section mt-auto">
                 <div className="d-flex justify-content-between align-items-center mb-2">

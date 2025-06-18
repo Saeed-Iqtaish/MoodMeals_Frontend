@@ -4,12 +4,12 @@ import MoodBadge from '../global/MoodBadge';
 
 function RecipeHeader({ title, image, mood, isCommunityRecipe, approved, isModal = false, recipe }) {
   const getImageUrl = () => {
-    if (image) return image; 
-    
+    if (image) return image;
+
     if (isCommunityRecipe && recipe?.image_data) {
-      return `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image`;
+      return `${import.meta.env.VITE_API_URL}/community/${recipe.id}/image`;
     }
-    
+
     return null;
   };
 
@@ -40,9 +40,9 @@ function RecipeHeader({ title, image, mood, isCommunityRecipe, approved, isModal
     <div className="recipe-header">
       {imageUrl && (
         <div className="recipe-image-container">
-          <img 
-            src={imageUrl} 
-            alt={title} 
+          <img
+            src={imageUrl}
+            alt={title}
             className="recipe-image"
             onError={(e) => {
               console.error('Error loading recipe header image:', e.target.src);

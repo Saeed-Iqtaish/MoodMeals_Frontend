@@ -1,8 +1,19 @@
 import React from "react";
 
 function RecipeInstructions({ recipeDetails, isCommunityRecipe = false }) {
+  console.log('🔍 RecipeInstructions received:', { recipeDetails, isCommunityRecipe });
+
   if (isCommunityRecipe) {
-    if (!recipeDetails?.instructions || recipeDetails.instructions.length === 0) {
+    // 🔧 FIX: Add comprehensive null/undefined checks
+    if (!recipeDetails) {
+      return (
+        <div className="text-center p-4">
+          <p className="text-muted">Loading recipe details...</p>
+        </div>
+      );
+    }
+
+    if (!recipeDetails.instructions || !Array.isArray(recipeDetails.instructions) || recipeDetails.instructions.length === 0) {
       return (
         <div className="text-center p-4">
           <p className="text-muted">No instructions available</p>
@@ -15,11 +26,15 @@ function RecipeInstructions({ recipeDetails, isCommunityRecipe = false }) {
         <h6>Cooking Instructions</h6>
         <ol className="instructions-list">
           {recipeDetails.instructions
-            .sort((a, b) => a.step_number - b.step_number)
+            .sort((a, b) => (a.step_number || 0) - (b.step_number || 0))
             .map((instruction, index) => (
               <li key={index} className="instruction-step mb-3">
-                <strong>Step {instruction.step_number}</strong>
-                <p className="mt-1">{instruction.instruction}</p>
+                <strong>Step {instruction.step_number || index + 1}</strong>
+                <p className="mt-1">
+                  {typeof instruction === 'object' && instruction.instruction 
+                    ? instruction.instruction 
+                    : instruction || `Step ${index + 1}`}
+                </p>
               </li>
             ))}
         </ol>
@@ -27,7 +42,17 @@ function RecipeInstructions({ recipeDetails, isCommunityRecipe = false }) {
     );
   }
 
-  if (!recipeDetails?.analyzedInstructions || 
+  // For Spoonacular recipes
+  if (!recipeDetails) {
+    return (
+      <div className="text-center p-4">
+        <p className="text-muted">Loading instructions...</p>
+      </div>
+    );
+  }
+
+  if (!recipeDetails.analyzedInstructions || 
+      !Array.isArray(recipeDetails.analyzedInstructions) ||
       recipeDetails.analyzedInstructions.length === 0 ||
       !recipeDetails.analyzedInstructions[0]?.steps) {
     return (

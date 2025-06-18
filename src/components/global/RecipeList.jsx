@@ -293,7 +293,16 @@ const fetchCommunityRecipes = useCallback(async (controller) => {
               recipe={recipe}
               isCommunityRecipe={isCommunityList}
               isFavoritesPage={isFavoritesPage}
-              onClick={!isCommunityList && !isFavoritesPage ? onRecipeClick : isCommunityList ? onRecipeClick : undefined}
+              onClick={
+                // 🔧 FIX: Properly pass onClick for all cases including favorites
+                isFavoritesPage 
+                  ? onRecipeClick 
+                  : (!isCommunityList && !isFavoritesPage) 
+                    ? onRecipeClick 
+                    : isCommunityList 
+                      ? onRecipeClick 
+                      : undefined
+              }
               onFavoriteChange={onFavoriteChange || handleFavoriteChange}
             />
           </Col>

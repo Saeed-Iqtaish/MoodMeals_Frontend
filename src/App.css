@@ -9,46 +9,26 @@
   --dark: #011627;
 }
 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-main.container {
-  flex: 1;
-  padding-top: 1.5rem;
-}
-
-main.container-fluid {
-  flex: 1;
-  padding: 0;
-}
-
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f8f9fa;
-  color: #212529;
-}
-
-.container, .container-fluid {
-  max-width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
+/* 🔧 FIX: Sticky footer layout */
 #app-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
+main.container {
+  flex: 1;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+main.container-fluid {
+  flex: 1;
+  padding: 0;
+  padding-bottom: 2rem;
+}
+
+/* 🔧 FIX: Footer sticks to bottom */
 footer.site-footer {
   width: 100%;
   background: var(--main);
@@ -56,21 +36,18 @@ footer.site-footer {
   color: white;
   text-align: center;
   margin-top: auto;
+  flex-shrink: 0;
 }
 
+/* Content width constraints */
 .container, .container-fluid {
   max-width: 1200px !important;
   margin: 0 auto !important;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-/* Fix the main content area */
-body > div {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* Fix the hero section width */
+/* Hero section and content areas */
 .hero-section, 
 .search-filter-container,
 .recipe-grid {
@@ -82,5 +59,14 @@ body > div {
 @media (max-width: 768px) {
   .navbar-brand {
     font-size: 1.25rem;
+  }
+  
+  footer.site-footer {
+    padding: 1.5rem 1rem;
+  }
+  
+  main.container,
+  main.container-fluid {
+    padding-bottom: 1rem;
   }
 }

@@ -1,8 +1,19 @@
 import React from "react";
 
 function RecipeIngredients({ recipeDetails, isCommunityRecipe = false }) {
+  console.log('🔍 RecipeIngredients received:', { recipeDetails, isCommunityRecipe });
+
   if (isCommunityRecipe) {
-    if (!recipeDetails?.ingredients || recipeDetails.ingredients.length === 0) {
+    // 🔧 FIX: Add comprehensive null/undefined checks
+    if (!recipeDetails) {
+      return (
+        <div className="text-center p-4">
+          <p className="text-muted">Loading recipe details...</p>
+        </div>
+      );
+    }
+
+    if (!recipeDetails.ingredients || !Array.isArray(recipeDetails.ingredients) || recipeDetails.ingredients.length === 0) {
       return (
         <div className="text-center p-4">
           <p className="text-muted">No ingredients available</p>
@@ -16,7 +27,9 @@ function RecipeIngredients({ recipeDetails, isCommunityRecipe = false }) {
         <ul className="ingredients-list">
           {recipeDetails.ingredients.map((ingredient, index) => (
             <li key={index} className="ingredient-item mb-2">
-              {ingredient.ingredient}
+              {typeof ingredient === 'object' && ingredient.ingredient 
+                ? ingredient.ingredient 
+                : ingredient || `Ingredient ${index + 1}`}
             </li>
           ))}
         </ul>
@@ -24,7 +37,16 @@ function RecipeIngredients({ recipeDetails, isCommunityRecipe = false }) {
     );
   }
 
-  if (!recipeDetails?.extendedIngredients || recipeDetails.extendedIngredients.length === 0) {
+  // For Spoonacular recipes
+  if (!recipeDetails) {
+    return (
+      <div className="text-center p-4">
+        <p className="text-muted">Loading ingredients...</p>
+      </div>
+    );
+  }
+
+  if (!recipeDetails.extendedIngredients || !Array.isArray(recipeDetails.extendedIngredients) || recipeDetails.extendedIngredients.length === 0) {
     return (
       <div className="text-center p-4">
         <p className="text-muted">Loading ingredients...</p>

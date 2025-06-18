@@ -1,13 +1,9 @@
-:root {
-  --main: #FF6B6B;
-  --happy: #FFD93D;
-  --cozy: #FFE5B4;
-  --relaxed: #CDB4DB;
-  --energetic: #FFAD69;
-  --diet: #A8D5BA;
-  --allergy: #FF6B6B;
-  --dark: #011627;
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
 
+:root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -19,66 +15,62 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Full width HTML and body */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
+/* Full width root container */
 #root {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
+/* Body styling */
 body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #f8f9fa;
   color: #212529;
   margin: 0;
+  padding: 0;
   width: 100%;
 }
 
-/* Remove all the max-width constraints */
-.container, .container-fluid {
+/* Override Bootstrap container constraints */
+.container {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0 !important;
+}
+
+.container-fluid {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0 !important;
+}
+
+/* Ensure main content takes full width */
+main {
   width: 100% !important;
   max-width: none !important;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  margin: 0 !important;
+  padding: 1rem 0 !important;
 }
 
-/* Remove the constraining styles */
-body > div {
+/* Full width app wrapper */
+#app-wrapper {
   width: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
-}
-
-main.container {
-  flex: 1;
-  padding-top: 1.5rem;
-  width: 100%;
-}
-
-main.container-fluid {
-  flex: 1;
-  padding: 0;
-  width: 100%;
-}
-
-footer.site-footer {
-  width: 100%;
-  background: var(--main);
-  padding: 2rem 1rem;
-  color: white;
-  text-align: center;
-  margin-top: auto;
-}
-
-@media (max-width: 768px) {
-  .navbar-brand {
-    font-size: 1.25rem;
-  }
 }

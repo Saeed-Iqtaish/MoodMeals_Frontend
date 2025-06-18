@@ -1,5 +1,6 @@
 // src/components/ratings/RatingDisplay.jsx
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import StarRating from './StarRating';
 import { ratingsAPI } from '../../services/api';
 
@@ -10,15 +11,20 @@ function RatingDisplay({
   className = '',
   showOnHover = false 
 }) {
+  const { isAuthenticated } = useAuth();
   const [rating, setRating] = useState({ average: 0, count: 0 });
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(!showOnHover);
 
   useEffect(() => {
-    if (recipeId && isCommunityRecipe && visible) {
+    // 🔧 FIX: Only fetch ratings if user is authenticated and it's a community recipe
+    if (recipeId && isCommunityRecipe && visible && isAuthenticated) {
       fetchRating();
+    } else if (!isAuthenticated && isCommunityRecipe) {
+      // 🔧 Reset to default values if not authenticated
+      setRating({ average: 0, count: 0 });
     }
-  }, [recipeId, isCommunityRecipe, visible]);
+  }, [recipeId, isCommunityRecipe, visible, isAuthenticated]);
 
   const fetchRating = async () => {
     try {
@@ -30,6 +36,7 @@ function RatingDisplay({
       });
     } catch (error) {
       console.error('Error fetching rating:', error);
+      // 🔧 Set default values on error instead of throwing
       setRating({ average: 0, count: 0 });
     } finally {
       setLoading(false);
@@ -38,6 +45,11 @@ function RatingDisplay({
 
   // Don't render for non-community recipes
   if (!isCommunityRecipe) {
+    return null;
+  }
+
+  // 🔧 FIX: Don't render if user is not authenticated
+  if (!isAuthenticated) {
     return null;
   }
 

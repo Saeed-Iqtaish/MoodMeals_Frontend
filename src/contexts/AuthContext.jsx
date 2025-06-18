@@ -18,6 +18,19 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkAuthStatus();
+    
+    // 🔧 FIX: Listen for logout events from API interceptor
+    const handleLogout = () => {
+      console.log('🔍 Auth logout event received');
+      setUser(null);
+      setIsAuthenticated(false);
+    };
+
+    window.addEventListener('auth:logout', handleLogout);
+    
+    return () => {
+      window.removeEventListener('auth:logout', handleLogout);
+    };
   }, []);
 
   const checkAuthStatus = async () => {

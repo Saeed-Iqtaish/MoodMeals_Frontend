@@ -19,12 +19,18 @@ api.interceptors.request.use(
   }
 );
 
+// 🔧 FIX: Remove the automatic reload that causes infinite loops
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      // 🔧 Only remove token, don't reload the page
       localStorage.removeItem('token');
-      window.location.reload();
+      
+      // 🔧 Optional: Dispatch a custom event that components can listen to
+      window.dispatchEvent(new CustomEvent('auth:logout'));
+      
+      console.warn('🚨 Authentication failed - token removed');
     }
     return Promise.reject(error);
   }
@@ -75,7 +81,26 @@ export const notesAPI = {
 };
 
 export const ratingsAPI = {
-  getRating: (recipeId) => api.get(`/ratings/recipe/${recipeId}`),
+  // 🔧 FIX: Make ratings API calls optional and handle 401 gracefully
+  getRating: async (recipeId) => {
+    try {
+      return await api.get(`/ratings/recipe/${recipeId}`);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        // 🔧 Return empty rating data instead of throwing
+        console.log('🔍 Rating request failed - user not authenticated');
+        return { 
+          data: { 
+            average_rating: 0, 
+            total_ratings: 0,
+            user_rating: null 
+          } 
+        };
+      }
+      throw error;
+    }
+  },
+  
   saveRating: (recipeId, rating) => api.post('/ratings', { recipe_id: recipeId, rating }),
 };
 

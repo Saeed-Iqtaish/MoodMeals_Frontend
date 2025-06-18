@@ -3,32 +3,41 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 import "../../../styles/community/recipe-instructions-list.css";
 
-function RecipeInstructionsList({ instructions, onChange }) {
+function RecipeInstructionsList({ instructions = [], onChange }) {
+  // 🔧 FIX: Ensure instructions is always an array with at least one empty string
+  const safeInstructions = Array.isArray(instructions) && instructions.length > 0 
+    ? instructions 
+    : [""];
+
   function handleInstructionChange(index, value) {
-    const newInstructions = instructions.map((item, i) => i === index ? value : item);
-    onChange(newInstructions);
+    const newInstructions = safeInstructions.map((item, i) => i === index ? value : item);
+    if (onChange) {
+      onChange(newInstructions);
+    }
   }
 
   function addInstruction() {
-    onChange([...instructions, ""]);
+    if (onChange) {
+      onChange([...safeInstructions, ""]);
+    }
   }
 
   function removeInstruction(index) {
-    if (instructions.length > 1) {
-      onChange(instructions.filter((_, i) => i !== index));
+    if (safeInstructions.length > 1 && onChange) {
+      onChange(safeInstructions.filter((_, i) => i !== index));
     }
   }
 
   return (
     <Form.Group className="mb-3">
       <Form.Label>Instructions *</Form.Label>
-      {instructions.map((instruction, index) => (
+      {safeInstructions.map((instruction, index) => (
         <Row key={index} className="mb-2">
           <Col>
             <Form.Control
               as="textarea"
               rows={2}
-              value={instruction}
+              value={instruction || ""}
               onChange={(e) => handleInstructionChange(index, e.target.value)}
               placeholder={`Step ${index + 1}`}
             />
@@ -38,7 +47,7 @@ function RecipeInstructionsList({ instructions, onChange }) {
               variant="outline-danger"
               size="sm"
               onClick={() => removeInstruction(index)}
-              disabled={instructions.length === 1}
+              disabled={safeInstructions.length === 1}
             >
               <FiTrash2 />
             </Button>

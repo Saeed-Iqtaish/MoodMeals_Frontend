@@ -58,6 +58,7 @@ function FavoritesPage() {
     return count;
   };
 
+  // 🔧 FIX: Add recipe click handler for favorites page
   function handleRecipeClick(recipe) {
     setSelectedRecipe(recipe);
     setShowRecipeDetails(true);
@@ -135,12 +136,13 @@ function FavoritesPage() {
             allergy={appliedFilters.allergy}
             mood={appliedFilters.mood}
             isFavoritesPage={true}
-            onRecipeClick={handleRecipeClick}
+            onRecipeClick={handleRecipeClick} // 🔧 FIX: Pass the click handler
             onFavoriteChange={handleFavoriteChange}
           />
         </div>
       </Container>
 
+      {/* 🔧 FIX: Add RecipeDetails modal */}
       <RecipeDetails
         show={showRecipeDetails}
         onHide={handleRecipeDetailsClose}
