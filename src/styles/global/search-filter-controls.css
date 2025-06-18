@@ -1,0 +1,151 @@
+/* Updated search-filter-controls.css - Keep search and filter side by side */
+.search-filter-controls {
+  display: flex;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+/* Alignment options */
+.search-filter-controls.align-left {
+  justify-content: flex-start;
+}
+
+.search-filter-controls.align-right {
+  justify-content: flex-end;
+}
+
+.search-filter-controls.align-center {
+  justify-content: center;
+}
+
+.search-filter-controls.align-between {
+  justify-content: space-between;
+}
+
+.search-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap; /* Changed from wrap to nowrap to keep items side by side */
+}
+
+/* Filter Button Styles */
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 30px;
+  border: 1px solid var(--main);
+  background: white;
+  color: var(--main);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  white-space: nowrap;
+  min-width: fit-content;
+  flex-shrink: 0; /* Prevent the button from shrinking */
+}
+
+.filter-button:hover {
+  background: #fff3f3;
+  border-color: var(--main);
+}
+
+.filter-button.active {
+  background: var(--main);
+  color: white;
+  border-color: var(--main);
+}
+
+.filter-icon {
+  font-size: 1.1rem;
+}
+
+/* Badge for active filter count */
+.filter-button .badge {
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.5rem !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+}
+
+/* Search container adjustments */
+.search-filter-group .search-container {
+  flex: 1; /* Allow search to take remaining space */
+  min-width: 200px; /* Minimum width for search */
+  max-width: 350px; /* Maximum width for search */
+}
+
+/* Mobile responsiveness - keep side by side but make adjustments */
+@media (max-width: 768px) {
+  .search-filter-controls {
+    margin-bottom: 1rem;
+  }
+
+  .search-filter-controls.align-right,
+  .search-filter-controls.align-between {
+    justify-content: flex-end; /* Keep right alignment even on mobile */
+  }
+  
+  .search-filter-group {
+    gap: 0.75rem; /* Reduce gap slightly on mobile */
+    flex-wrap: nowrap; /* Still keep side by side */
+  }
+  
+  .filter-button {
+    padding: 10px 18px; /* Slightly smaller padding */
+    font-size: 0.95rem;
+    min-width: auto; /* Allow some compression */
+  }
+
+  /* Adjust search container for mobile */
+  .search-filter-group .search-container {
+    min-width: 150px; /* Smaller minimum on mobile */
+    max-width: 250px; /* Smaller maximum on mobile */
+  }
+}
+
+/* Very small screens - only then consider stacking if absolutely necessary */
+@media (max-width: 480px) {
+  .search-filter-group {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    align-items: stretch;
+  }
+  
+  .filter-button {
+    justify-content: center;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  /* Make search bar full width on very small screens */
+  .search-filter-group .search-container {
+    width: 100%;
+    max-width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 576px) and (min-width: 481px) {
+  /* Keep side by side for most mobile screens */
+  .search-filter-group {
+    gap: 0.5rem;
+  }
+  
+  .filter-button {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+  
+  .search-filter-group .search-container {
+    min-width: 140px;
+    max-width: 200px;
+  }
+}
