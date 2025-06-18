@@ -34,7 +34,7 @@ function RecipeDetails({
         `https://api.spoonacular.com/recipes/${recipe.id}/information`,
         {
           params: {
-            apiKey: process.env.REACT_APP_SPOONACULAR_API_KEY
+            apiKey: import.meta.env.VITE_SPOONACULAR_API_KEY
           }
         }
       );
@@ -58,7 +58,7 @@ function RecipeDetails({
     try {
       console.log('Fetching community recipe details for ID:', recipe.id);
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/community/${recipe.id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/community/${recipe.id}`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -105,7 +105,7 @@ function RecipeDetails({
   const getRecipeImage = () => {
     if (isCommunityRecipe) {
       return recipe?.image_data ?
-        `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image` :
+        `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image` :
         null;
     }
     return recipe?.image || recipeDetails?.image;

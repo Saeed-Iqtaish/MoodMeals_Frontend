@@ -5,7 +5,7 @@ function CommunityRecipeImage({ recipe, className = '' }) {
     return null;
   }
 
-  const imageUrl = `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image`;
+  const imageUrl = `${import.meta.env.VITE_API_URLL || 'http://localhost:5000/api'}/community/${recipe.id}/image`;
 
   return (
     <div className={`recipe-image-container ${className}`}>

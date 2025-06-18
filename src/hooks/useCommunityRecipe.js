@@ -30,7 +30,7 @@ const useCommunityRecipe = (id) => {
       
       console.log('Fetching community recipe for ID:', id);
       
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/community/${id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/community/${id}`);
       
       if (!response.ok) {
         if (response.status === 404) {

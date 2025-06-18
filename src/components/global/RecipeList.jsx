@@ -45,7 +45,7 @@ function RecipeList({
     const response = await axios.get("https://api.spoonacular.com/recipes/complexSearch", {
       signal: controller.signal,
       params: {
-        apiKey: process.env.REACT_APP_SPOONACULAR_API_KEY,
+        apiKey: import.meta.env.VITE_SPOONACULAR_API_KEY,
         number: limit,
         offset: offset,
         addRecipeInformation: true,
@@ -71,7 +71,7 @@ function RecipeList({
   }, [search, diet, allergy, mood, assignMood]);
 
 const fetchCommunityRecipes = useCallback(async (controller) => {
-  const response = await axios.get(`${process.env.REACT_APP_API_URL}/community`, {
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/community`, {
     signal: controller.signal
   });
   let filteredRecipes = response.data;
@@ -114,7 +114,7 @@ const fetchCommunityRecipes = useCallback(async (controller) => {
             const response = await axios.get(`https://api.spoonacular.com/recipes/${fav.recipe_id}/information`, {
               signal: controller.signal,
               params: {
-                apiKey: process.env.REACT_APP_SPOONACULAR_API_KEY
+                apiKey: import.meta.env.VITE_SPOONACULAR_API_KEY
               }
             });
 
@@ -137,7 +137,7 @@ const fetchCommunityRecipes = useCallback(async (controller) => {
       if (communityFavorites.length > 0) {
         const communityPromises = communityFavorites.map(async (fav) => {
           try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/community/${fav.recipe_id}`);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/community/${fav.recipe_id}`);
 
             return {
               ...response.data,
@@ -155,7 +155,6 @@ const fetchCommunityRecipes = useCallback(async (controller) => {
         allRecipes.push(...communityRecipes.filter(recipe => recipe !== null));
       }
 
-      // Apply filters
       let filteredRecipes = allRecipes;
 
       if (search) {

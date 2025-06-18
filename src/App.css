@@ -26,7 +26,6 @@ main.container {
   padding-top: 1.5rem;
 }
 
-/* Full-width main for recipe pages */
 main.container-fluid {
   flex: 1;
   padding: 0;
@@ -57,6 +56,27 @@ footer.site-footer {
   color: white;
   text-align: center;
   margin-top: auto;
+}
+
+.container, .container-fluid {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+/* Fix the main content area */
+body > div {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Fix the hero section width */
+.hero-section, 
+.search-filter-container,
+.recipe-grid {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media (max-width: 768px) {

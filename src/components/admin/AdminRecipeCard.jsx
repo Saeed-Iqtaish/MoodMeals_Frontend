@@ -26,7 +26,7 @@ function AdminRecipeCard({ recipe, onClick }) {
 
   const getImageUrl = () => {
     if (recipe.image_data) {
-      return `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image`;
+      return `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image`;
     }
     return null;
   };

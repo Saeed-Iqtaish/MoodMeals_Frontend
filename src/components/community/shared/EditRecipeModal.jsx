@@ -35,7 +35,7 @@ function EditRecipeModal({ show, onHide, recipe, onRecipeUpdated }) {
       title: recipeData.title || "",
       prepTime: recipeData.prep_time?.toString() || "",
       servings: recipeData.servings?.toString() || "",
-      mood: recipeData.mood || "Happy", // Get mood from database or default to Happy
+      mood: recipeData.mood,
       image: null
     });
 
@@ -117,7 +117,6 @@ function EditRecipeModal({ show, onHide, recipe, onRecipeUpdated }) {
     setError("");
 
     try {
-      // Validation
       if (!formData.title.trim()) {
         setError("Recipe title is required");
         setLoading(false);
@@ -157,18 +156,15 @@ function EditRecipeModal({ show, onHide, recipe, onRecipeUpdated }) {
         return;
       }
 
-      // Create FormData for the API request
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title.trim());
       formDataToSend.append('prep_time', parseInt(formData.prepTime));
       formDataToSend.append('servings', parseInt(formData.servings));
       formDataToSend.append('mood', formData.mood);
 
-      // Add ingredients and instructions
       formDataToSend.append('ingredients', JSON.stringify(validIngredients));
       formDataToSend.append('instructions', JSON.stringify(validInstructions));
 
-      // Add image if provided
       if (formData.image) {
         formDataToSend.append('image', formData.image);
       }
@@ -184,11 +180,11 @@ function EditRecipeModal({ show, onHide, recipe, onRecipeUpdated }) {
       });
 
       await communityAPI.updateRecipe(recipe.id, formDataToSend);
-      console.log('✅ Recipe updated successfully');
+      console.log('Recipe updated successfully');
       onRecipeUpdated();
       onHide();
     } catch (err) {
-      console.error("❌ Error updating recipe:", err);
+      console.error("Error updating recipe:", err);
       setError(err.response?.data?.details || err.response?.data?.error || "Failed to update recipe. Please try again.");
     } finally {
       setLoading(false);
@@ -311,7 +307,7 @@ function EditRecipeModal({ show, onHide, recipe, onRecipeUpdated }) {
           />
 
           {/* Debug info in development */}
-          {process.env.NODE_ENV === 'development' && (
+          {import.meta.env.MODE === 'development' && (
             <details className="mt-3">
               <summary className="text-muted small">Debug Info (Dev Only)</summary>
               <pre className="small text-muted mt-2">

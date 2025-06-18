@@ -9,7 +9,7 @@ import AccountPage from "./pages/AccountPage";
 import AdminPage from "./pages/AdminPage";
 import AdminCommunityRecipePage from "./pages/AdminCommunityRecipePage";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+// import './App.css';
 import AppNavbar from "./components/global/Navbar";
 import Footer from "./components/global/Footer";
 

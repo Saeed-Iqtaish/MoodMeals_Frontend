@@ -8,6 +8,7 @@ import CommunityControls from "../components/community/list/CommunityControls";
 import FilterModal from "../components/filterPanel/FilterModal";
 import RecipeList from "../components/global/RecipeList";
 import CreateRecipeModal from "../components/community/list/CreateRecipeModal";
+import RecipeDetails from "../components/global/RecipeDetails"
 import "../styles/global/global.css";
 
 function CommunityPage() {

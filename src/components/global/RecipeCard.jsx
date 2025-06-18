@@ -53,9 +53,9 @@ function RecipeCard({
   };
 
   const title = recipe.title;
-  const image = isActuallyCommunityRecipe
-    ? (recipe.image_data ? `${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image` : null)
-    : recipe.image;
+const image = isActuallyCommunityRecipe
+  ? (recipe.image_data ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image` : null)
+  : recipe.image;
   const prepTime = isActuallyCommunityRecipe ? `${recipe.prep_time || 'N/A'} mins` : `${recipe.readyInMinutes} mins`;
   const servings = isActuallyCommunityRecipe ? recipe.servings || 'N/A' : recipe.servings;
   const mood = recipe.mood || "Happy";
