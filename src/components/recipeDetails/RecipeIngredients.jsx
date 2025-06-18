@@ -4,7 +4,6 @@ function RecipeIngredients({ recipeDetails, isCommunityRecipe = false }) {
   console.log('🔍 RecipeIngredients received:', { recipeDetails, isCommunityRecipe });
 
   if (isCommunityRecipe) {
-    // 🔧 FIX: Add comprehensive null/undefined checks
     if (!recipeDetails) {
       return (
         <div className="text-center p-4">
@@ -37,7 +36,6 @@ function RecipeIngredients({ recipeDetails, isCommunityRecipe = false }) {
     );
   }
 
-  // For Spoonacular recipes
   if (!recipeDetails) {
     return (
       <div className="text-center p-4">

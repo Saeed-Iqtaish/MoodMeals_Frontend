@@ -4,7 +4,6 @@ function RecipeInstructions({ recipeDetails, isCommunityRecipe = false }) {
   console.log('🔍 RecipeInstructions received:', { recipeDetails, isCommunityRecipe });
 
   if (isCommunityRecipe) {
-    // 🔧 FIX: Add comprehensive null/undefined checks
     if (!recipeDetails) {
       return (
         <div className="text-center p-4">
