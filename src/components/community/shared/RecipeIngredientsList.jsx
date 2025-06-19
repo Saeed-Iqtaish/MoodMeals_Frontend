@@ -4,7 +4,6 @@ import { FiPlus, FiTrash2 } from "react-icons/fi";
 import "../../../styles/community/recipe-ingredients-list.css";
 
 function RecipeIngredientsList({ ingredients = [], onChange }) {
-  // 🔧 FIX: Ensure ingredients is always an array with at least one empty string
   const safeIngredients = Array.isArray(ingredients) && ingredients.length > 0 
     ? ingredients 
     : [""];

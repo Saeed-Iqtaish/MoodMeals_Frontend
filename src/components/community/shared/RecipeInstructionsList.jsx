@@ -4,7 +4,6 @@ import { FiPlus, FiTrash2 } from "react-icons/fi";
 import "../../../styles/community/recipe-instructions-list.css";
 
 function RecipeInstructionsList({ instructions = [], onChange }) {
-  // 🔧 FIX: Ensure instructions is always an array with at least one empty string
   const safeInstructions = Array.isArray(instructions) && instructions.length > 0 
     ? instructions 
     : [""];

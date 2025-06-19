@@ -40,7 +40,7 @@ function AllergySelector({ selected = [], onSelect, userAllergies = [], showDesc
       {selected.length > 0 && (
         <Alert variant="warning" className="mb-3">
           <small>
-            <strong>⚠️ Safety Notice:</strong> Recipes containing {selected.join(', ')} will be automatically filtered out. 
+            <strong>Safety Notice:</strong> Recipes containing {selected.join(', ')} will be automatically filtered out. 
             Always verify ingredients before consuming any recipe.
           </small>
         </Alert>

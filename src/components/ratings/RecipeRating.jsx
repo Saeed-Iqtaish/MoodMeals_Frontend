@@ -78,7 +78,6 @@ function RecipeRating({
     }
   };
 
-  // Don't show rating for non-community recipes
   if (!isCommunityRecipe) {
     return null;
   }
@@ -106,7 +105,6 @@ function RecipeRating({
         </Alert>
       )}
 
-      {/* Overall Rating Display */}
       <div className="mb-3">
         <div className="d-flex align-items-center gap-2 mb-1">
           <StarRating
@@ -122,7 +120,6 @@ function RecipeRating({
         )}
       </div>
 
-      {/* User Rating Section */}
       {showUserRating && user && (
         <div className="user-rating-section">
           <div className="mb-2">
@@ -153,7 +150,6 @@ function RecipeRating({
         </div>
       )}
 
-      {/* Login Prompt */}
       {showUserRating && !user && (
         <div className="mt-2">
           <small className="text-muted">

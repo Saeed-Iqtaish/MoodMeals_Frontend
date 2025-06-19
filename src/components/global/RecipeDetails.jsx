@@ -105,7 +105,7 @@ function RecipeDetails({
   const getRecipeImage = () => {
     if (isCommunityRecipe) {
       return recipe?.image_data ?
-        `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image` :
+        `${import.meta.env.VITE_API_URL}/community/${recipe.id}/image` :
         null;
     }
     return recipe?.image || recipeDetails?.image;
