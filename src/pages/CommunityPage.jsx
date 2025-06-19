@@ -7,6 +7,7 @@ import CommunityHeader from "../components/community/list/CommunityHeader";
 import CommunityControls from "../components/community/list/CommunityControls";
 import FilterModal from "../components/filterPanel/FilterModal";
 import RecipeList from "../components/global/RecipeList";
+import RecipeDetails from "../components/community/shared/RecipeDetails"
 import CreateRecipeModal from "../components/community/list/CreateRecipeModal";
 import "../styles/global/global.css";
 
