@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
-import RecipeIngredients from '../../recipeDetails/RecipeIngredients';  // 🔧 FIX: Use display component
-import RecipeInstructions from '../../recipeDetails/RecipeInstructions'; // 🔧 FIX: Use display component
+import RecipeIngredients from '../../recipeDetails/RecipeIngredients';
+import RecipeInstructions from '../../recipeDetails/RecipeInstructions';
 
 function CommunityRecipeContent({ recipe }) {
   if (!recipe) {

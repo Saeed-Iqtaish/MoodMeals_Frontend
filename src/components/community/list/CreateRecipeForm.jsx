@@ -96,11 +96,9 @@ function CreateRecipeForm({ onSuccess, onError, onCancel, error }) {
                 submitData.append("image", formData.image);
             }
 
-            console.log('🚀 Submitting recipe with mood:', formData.mood);
+            console.log('Submitting recipe with mood:', formData.mood);
             
             await communityAPI.createRecipe(submitData);
-
-            console.log('✅ Recipe submitted successfully!');
 
             setFormData({
                 title: "",
@@ -114,7 +112,7 @@ function CreateRecipeForm({ onSuccess, onError, onCancel, error }) {
 
             onSuccess();
         } catch (err) {
-            console.error("❌ Error creating recipe:", err);
+            console.error("Error creating recipe:", err);
             
             if (err.response?.status === 401) {
                 onError("Please log in again to create recipes.");

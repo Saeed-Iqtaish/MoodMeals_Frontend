@@ -54,14 +54,14 @@ function RecipeCard({
 
   const title = recipe.title;
   const image = isActuallyCommunityRecipe
-    ? (recipe.image_data ? `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/community/${recipe.id}/image` : null)
+    ? (recipe.image_data ? `${import.meta.env.VITE_API_URL}/community/${recipe.id}/image` : null)
     : recipe.image;
-  const prepTime = isActuallyCommunityRecipe ? `${recipe.prep_time || 'N/A'} mins` : `${recipe.readyInMinutes} mins`;
-  const servings = isActuallyCommunityRecipe ? recipe.servings || 'N/A' : recipe.servings;
-  const mood = recipe.mood || "Happy";
+  const prepTime = isActuallyCommunityRecipe ? `${recipe.prep_time} mins` : `${recipe.readyInMinutes} mins`;
+  const servings = isActuallyCommunityRecipe ? recipe.servings : recipe.servings;
+  const mood = recipe.mood;
 
   const creatorName = isActuallyCommunityRecipe
-    ? (recipe.created_by_username || "Anonymous")
+    ? (recipe.created_by_username)
     : null;
 
   const getCardClass = () => {
@@ -183,8 +183,6 @@ function RecipeCard({
                   ))}
                 </div>
               )}
-
-              {/* 🔧 FIX: Removed the recipe type badges */}
 
               <div className="notes-section mt-auto">
                 <div className="d-flex justify-content-between align-items-center mb-2">

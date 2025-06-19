@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -8,264 +8,94 @@ import CommunityControls from "../components/community/list/CommunityControls";
 import FilterModal from "../components/filterPanel/FilterModal";
 import RecipeList from "../components/global/RecipeList";
 import CreateRecipeModal from "../components/community/list/CreateRecipeModal";
-import RecipeDetails from "../components/global/RecipeDetails"
-import useRecipeFilters from "../hooks/useRecipeFilters .js";
 import "../styles/global/global.css";
 
-// Error Boundary Component
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error('🚨 COMMUNITY PAGE ERROR:', error);
-    console.error('🚨 ERROR INFO:', errorInfo);
-    console.error('🚨 STACK TRACE:', error.stack);
-    
-    // Prevent infinite refresh by storing error in sessionStorage
-    sessionStorage.setItem('communityPageError', JSON.stringify({
-      message: error.message,
-      stack: error.stack,
-      timestamp: Date.now()
-    }));
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <Container className="py-5">
-          <div className="alert alert-danger">
-            <h4>Something went wrong with the Community Page</h4>
-            <p><strong>Error:</strong> {this.state.error?.message}</p>
-            <details>
-              <summary>Stack Trace</summary>
-              <pre>{this.state.error?.stack}</pre>
-            </details>
-            <button 
-              className="btn btn-primary mt-3"
-              onClick={() => {
-                sessionStorage.removeItem('communityPageError');
-                window.location.reload();
-              }}
-            >
-              Reload Page
-            </button>
-          </div>
-        </Container>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
 function CommunityPage() {
-  const renderCount = useRef(0);
-  renderCount.current++;
-  
-  console.log(`🔍 CommunityPage render #${renderCount.current}`);
-  console.log('🔍 Render timestamp:', new Date().toISOString());
-  
-  // Check for previous errors
-  useEffect(() => {
-    const storedError = sessionStorage.getItem('communityPageError');
-    if (storedError) {
-      console.error('🚨 PREVIOUS ERROR FOUND:', JSON.parse(storedError));
-    }
-  }, []);
-
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
-  console.log('🔍 Auth state:', { isAuthenticated, userId: user?.id });
 
   const [showFilters, setShowFilters] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showRecipeDetails, setShowRecipeDetails] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
+
+  const [filters, setFilters] = useState({
+    search: "",
+    diet: [],
+    allergy: [],
+    mood: [],
+  });
+  const [appliedFilters, setAppliedFilters] = useState({ ...filters });
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  console.log('🔍 Modal states:', {
-    showFilters,
-    showCreateModal,
-    showAuthModal,
-    showRecipeDetails,
-    refreshTrigger
-  });
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      setAppliedFilters((prev) => ({
+        ...prev,
+        search: filters.search,
+      }));
+    }, 300);
+    return () => clearTimeout(delay);
+  }, [filters.search]);
 
-  // Wrap useRecipeFilters in try-catch
-  let filters, appliedFilters, updateFilter, applyFilters, clearFilters, getActiveFilterCount, userAllergies;
-  
-  try {
-    const hookResult = useRecipeFilters();
-    filters = hookResult.filters;
-    appliedFilters = hookResult.appliedFilters;
-    updateFilter = hookResult.updateFilter;
-    applyFilters = hookResult.applyFilters;
-    clearFilters = hookResult.clearFilters;
-    getActiveFilterCount = hookResult.getActiveFilterCount;
-    userAllergies = hookResult.userAllergies;
-    
-    console.log('🔍 useRecipeFilters result:', {
-      filters,
-      appliedFilters,
-      userAllergies
-    });
-  } catch (error) {
-    console.error('🚨 ERROR in useRecipeFilters:', error);
-    throw error; // Re-throw to be caught by error boundary
+  const handleApplyFilters = useCallback(() => {
+    setAppliedFilters({ ...filters });
+  }, [filters]);
+
+  function handleClearFilters() {
+    const cleared = { search: "", diet: [], allergy: [], mood: [] };
+    setFilters(cleared);
+    setAppliedFilters(cleared);
   }
 
-  // 🔧 FIX: Stable callback functions with error handling
-  const handleApplyFilters = useCallback(() => {
-    try {
-      console.log('🔍 handleApplyFilters called');
-      applyFilters();
-      setShowFilters(false);
-    } catch (error) {
-      console.error('🚨 ERROR in handleApplyFilters:', error);
+  function handleCreateRecipe() {
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+      return;
     }
-  }, [applyFilters]);
+    setShowCreateModal(true);
+  }
 
-  const handleClearFilters = useCallback(() => {
-    try {
-      console.log('🔍 handleClearFilters called');
-      clearFilters();
-    } catch (error) {
-      console.error('🚨 ERROR in handleClearFilters:', error);
-    }
-  }, [clearFilters]);
+  function handleRecipeCreated() {
+    setShowCreateModal(false);
+    setRefreshTrigger(prev => prev + 1);
+  }
 
-  const handleCreateRecipe = useCallback(() => {
-    try {
-      console.log('🔍 handleCreateRecipe called, isAuthenticated:', isAuthenticated);
-      if (!isAuthenticated) {
-        setShowAuthModal(true);
-        return;
-      }
-      setShowCreateModal(true);
-    } catch (error) {
-      console.error('🚨 ERROR in handleCreateRecipe:', error);
-    }
-  }, [isAuthenticated]);
+  function handleAuthSuccess() {
+    setShowAuthModal(false);
+    setShowCreateModal(true);
+  }
 
-  const handleRecipeCreated = useCallback(() => {
-    try {
-      console.log('🔍 handleRecipeCreated called');
-      setShowCreateModal(false);
-      setRefreshTrigger(prev => {
-        console.log('🔍 Updating refreshTrigger from', prev, 'to', prev + 1);
-        return prev + 1;
-      });
-    } catch (error) {
-      console.error('🚨 ERROR in handleRecipeCreated:', error);
-    }
-  }, []);
+  function handleRecipeClick(recipe) {
+    setSelectedRecipe(recipe);
+    setShowRecipeDetails(true);
+  }
 
-  const handleAuthSuccess = useCallback(() => {
-    try {
-      console.log('🔍 handleAuthSuccess called');
-      setShowAuthModal(false);
-      setShowCreateModal(true);
-    } catch (error) {
-      console.error('🚨 ERROR in handleAuthSuccess:', error);
-    }
-  }, []);
+  function handleRecipeDetailsClose() {
+    setShowRecipeDetails(false);
+    setSelectedRecipe(null);
+  }
 
-  const handleRecipeClick = useCallback((recipe) => {
-    try {
-      console.log('🔍 handleRecipeClick called with recipe:', recipe?.id);
-      setSelectedRecipe(recipe);
-      setShowRecipeDetails(true);
-    } catch (error) {
-      console.error('🚨 ERROR in handleRecipeClick:', error);
-    }
-  }, []);
+  function handleViewFullRecipe(recipe) {
+    navigate(`/community/${recipe.id}`);
+    setShowRecipeDetails(false);
+  }
 
-  const handleRecipeDetailsClose = useCallback(() => {
-    try {
-      console.log('🔍 handleRecipeDetailsClose called');
-      setShowRecipeDetails(false);
-      setSelectedRecipe(null);
-    } catch (error) {
-      console.error('🚨 ERROR in handleRecipeDetailsClose:', error);
-    }
-  }, []);
-
-  const handleViewFullRecipe = useCallback((recipe) => {
-    try {
-      console.log('🔍 handleViewFullRecipe called with recipe:', recipe?.id);
-      navigate(`/community/${recipe.id}`);
-      setShowRecipeDetails(false);
-    } catch (error) {
-      console.error('🚨 ERROR in handleViewFullRecipe:', error);
-    }
-  }, [navigate]);
-
-  const handleFavoriteChange = useCallback((recipeId, isFavorited) => {
-    try {
-      console.log(`🔍 handleFavoriteChange called: Recipe ${recipeId} favorite status changed: ${isFavorited}`);
-    } catch (error) {
-      console.error('🚨 ERROR in handleFavoriteChange:', error);
-    }
-  }, []);
-
-  const handleSearchChange = useCallback((val) => {
-    try {
-      console.log('🔍 handleSearchChange called with value:', val);
-      updateFilter("search", val);
-    } catch (error) {
-      console.error('🚨 ERROR in handleSearchChange:', error);
-    }
-  }, [updateFilter]);
-
-  const toggleFilters = useCallback(() => {
-    try {
-      console.log('🔍 toggleFilters called, current showFilters:', showFilters);
-      setShowFilters(prev => !prev);
-    } catch (error) {
-      console.error('🚨 ERROR in toggleFilters:', error);
-    }
-  }, [showFilters]);
-
-  const handleSetFilters = useCallback((newFilters) => {
-    try {
-      console.log('🔍 handleSetFilters called with:', newFilters);
-      Object.keys(newFilters).forEach(key => {
-        if (filters[key] !== newFilters[key]) {
-          console.log(`🔍 Updating filter ${key} from`, filters[key], 'to', newFilters[key]);
-          updateFilter(key, newFilters[key]);
-        }
-      });
-    } catch (error) {
-      console.error('🚨 ERROR in handleSetFilters:', error);
-    }
-  }, [filters, updateFilter]);
-
-  // Add effect to track when applied filters change
-  useEffect(() => {
-    console.log('🔍 appliedFilters changed:', appliedFilters);
-  }, [appliedFilters]);
-
-  console.log('🔍 About to render JSX');
+  function handleFavoriteChange(recipeId, isFavorited) {
+    console.log(`Recipe ${recipeId} favorite status changed: ${isFavorited}`);
+  }
 
   return (
-    <ErrorBoundary>
+    <>
       <Container fluid className="px-3 px-md-5">
         <CommunityHeader />
-        
+
         <CommunityControls
           searchTerm={filters.search}
-          setSearchTerm={handleSearchChange}
+          setSearchTerm={(val) => setFilters((prev) => ({ ...prev, search: val }))}
           showFilters={showFilters}
-          onToggleFilters={toggleFilters}
+          onToggleFilters={() => setShowFilters((prev) => !prev)}
           onCreateRecipe={handleCreateRecipe}
         />
 
@@ -279,8 +109,6 @@ function CommunityPage() {
             refreshTrigger={refreshTrigger}
             onRecipeClick={handleRecipeClick}
             onFavoriteChange={handleFavoriteChange}
-            onLoginRequired={() => setShowAuthModal(true)}
-            enableInfiniteScroll={false}
           />
         </div>
       </Container>
@@ -298,10 +126,10 @@ function CommunityPage() {
         show={showFilters}
         onHide={() => setShowFilters(false)}
         filters={filters}
-        setFilters={handleSetFilters}
+        setFilters={setFilters}
         onApply={handleApplyFilters}
         onClear={handleClearFilters}
-        userAllergies={userAllergies}
+        userAllergies={user?.allergies || []}
       />
 
       <AuthModal
@@ -317,7 +145,7 @@ function CommunityPage() {
           onSuccess={handleRecipeCreated}
         />
       )}
-    </ErrorBoundary>
+    </>
   );
 }
 

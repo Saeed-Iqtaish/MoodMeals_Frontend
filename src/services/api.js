@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -19,18 +19,15 @@ api.interceptors.request.use(
   }
 );
 
-// 🔧 FIX: Remove the automatic reload that causes infinite loops
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // 🔧 Only remove token, don't reload the page
       localStorage.removeItem('token');
-      
-      // 🔧 Optional: Dispatch a custom event that components can listen to
+
       window.dispatchEvent(new CustomEvent('auth:logout'));
       
-      console.warn('🚨 Authentication failed - token removed');
+      console.warn('Authentication failed - token removed');
     }
     return Promise.reject(error);
   }
@@ -41,7 +38,6 @@ export const authAPI = {
     axios.post(`${API_BASE_URL}/auth/login`, { email, password }),
   signup: (username, email, password) => 
     axios.post(`${API_BASE_URL}/auth/signup`, { username, email, password }),
-  getMe: () => api.get('/auth/me'),
 };
 
 export const userAPI = {
@@ -81,14 +77,12 @@ export const notesAPI = {
 };
 
 export const ratingsAPI = {
-  // 🔧 FIX: Make ratings API calls optional and handle 401 gracefully
   getRating: async (recipeId) => {
     try {
       return await api.get(`/ratings/recipe/${recipeId}`);
     } catch (error) {
       if (error.response?.status === 401) {
-        // 🔧 Return empty rating data instead of throwing
-        console.log('🔍 Rating request failed - user not authenticated');
+        console.log('Rating request failed - user not authenticated');
         return { 
           data: { 
             average_rating: 0, 
